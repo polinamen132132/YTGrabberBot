@@ -63,6 +63,7 @@ async def button(update: Update, context: CallbackContext) -> None:
 
     if query.data == 'download_next':
         await query.message.reply_text("Please send me the next YouTube link.")
+        # Restart the conversation to handle the next link
         return HANDLE_LINK
 
 # Cancel handler to stop the conversation
