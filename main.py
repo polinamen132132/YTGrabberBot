@@ -75,6 +75,8 @@ def main() -> None:
     )
 
     application.add_handler(conv_handler)
+    application.add_handler(CallbackQueryHandler(button, pattern='download_next'))
+
     application.run_polling()
 
 if __name__ == "__main__":
