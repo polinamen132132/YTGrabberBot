@@ -12,7 +12,7 @@ load_dotenv()
 
 api_key = os.getenv('API_KEY')
 
-HANDLE_LINK = range(2)
+HANDLE_LINK = 1
 
 # Initialize S3 client
 s3_client = boto3.client('s3')
