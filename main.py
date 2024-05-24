@@ -41,8 +41,15 @@ async def handle_link(update: Update, context: CallbackContext) -> int:
         url = s3_client.generate_presigned_url('get_object',
                                                Params={'Bucket': bucket_name, 'Key': video_file_path},
                                                ExpiresIn=3600)
+        # Create button for downloading the next video
+        keyboard = [
+            [InlineKeyboardButton("Download Next Video", callback_data='download_next')]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
         await update.message.reply_text(
-            f'Title: {yt.title}\nViews: {yt.views}\nVideo has been uploaded. Download here: {url}'
+            f'Title: {yt.title}\nViews: {yt.views}\nVideo has been uploaded. Download here: {url}',
+             reply_markup=reply_markup
         )
         return ConversationHandler.END
     except Exception as e:
