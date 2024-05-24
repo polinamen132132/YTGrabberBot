@@ -52,12 +52,12 @@ async def handle_link(update: Update, context: CallbackContext) -> int:
             f'Title: {yt.title}\nViews: {yt.views}\nVideo has been uploaded. Download here: {url}',
             reply_markup=reply_markup
         )
-        return ConversationHandler.END
+        return HANDLE_LINK
     except Exception as e:
         await update.message.reply_text(f'Failed to download or upload video. Error: {str(e)}')
-        return ConversationHandler.END
+        return HANDLE_LINK
 
-async def button(update: Update, context: CallbackContext) -> None:
+async def button(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     await query.answer()
 
@@ -80,7 +80,8 @@ def main() -> None:
         states={
             HANDLE_LINK: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_link)],
         },
-        fallbacks=[CommandHandler('cancel', cancel)]
+        fallbacks=[CommandHandler('cancel', cancel)],
+        allow_reentry=True  # Allow reentry to handle multiple links
     )
 
     application.add_handler(conv_handler)
