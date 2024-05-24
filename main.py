@@ -49,6 +49,14 @@ async def handle_link(update: Update, context: CallbackContext) -> int:
         await update.message.reply_text(f'Failed to download or upload video. Error: {str(e)}')
         return ConversationHandler.END
 
+async def button(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == 'download_next':
+        await query.message.reply_text("Please send me the next YouTube link.")
+        return HANDLE_LINK
+    
 # Cancel handler to stop the conversation
 async def cancel(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text('Operation canceled.')
