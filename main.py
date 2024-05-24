@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application, CommandHandler, MessageHandler, filters,
     CallbackContext, ConversationHandler, CallbackQueryHandler
@@ -41,6 +41,7 @@ async def handle_link(update: Update, context: CallbackContext) -> int:
         url = s3_client.generate_presigned_url('get_object',
                                                Params={'Bucket': bucket_name, 'Key': video_file_path},
                                                ExpiresIn=3600)
+        
         # Create button for downloading the next video
         keyboard = [
             [InlineKeyboardButton("Download Next Video", callback_data='download_next')]
@@ -49,7 +50,7 @@ async def handle_link(update: Update, context: CallbackContext) -> int:
 
         await update.message.reply_text(
             f'Title: {yt.title}\nViews: {yt.views}\nVideo has been uploaded. Download here: {url}',
-             reply_markup=reply_markup
+            reply_markup=reply_markup
         )
         return ConversationHandler.END
     except Exception as e:
@@ -63,7 +64,7 @@ async def button(update: Update, context: CallbackContext) -> None:
     if query.data == 'download_next':
         await query.message.reply_text("Please send me the next YouTube link.")
         return HANDLE_LINK
-    
+
 # Cancel handler to stop the conversation
 async def cancel(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text('Operation canceled.')
@@ -82,7 +83,7 @@ def main() -> None:
     )
 
     application.add_handler(conv_handler)
-    application.add_handler(CallbackQueryHandler(button, pattern='download_next'))
+    application.add_handler(CallbackQueryHandler(button, pattern='^download_next$'))
 
     application.run_polling()
 
